@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+	
+	<!-- 数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" >
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl" />
+		<property name="username" value="scott" />
+		<property name="password" value="tiger" />
+	</bean>
+	
+	<!-- sessionFactory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" >
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.current_session_context_class">thread</prop>
+				<prop key="javax.persitence.validation.mode">none</prop>
+			</props>
+		</property>
+		<!-- 指定映射文件路径 -->
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:com/tr/entity/</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- dao -->
+	<bean id="dao" class="com.tr.dao.impl.DaoImpl" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<!-- service -->
+	<bean id="employeeService" class="com.tr.service.impl.SysEmployeeServiceImpl" >
+		<property name="dao" ref="dao" />
+	</bean>
+	<bean id="claimVocherService" class="com.tr.service.impl.BizClaimVoucherServiceImpl" >
+		<property name="dao" ref="dao" ></property>
+	</bean>
+	<bean id="claimVoucherDetailService" class="com.tr.service.impl.BizClaimVoucherDetailServiceImpl" >
+		<property name="dao" ref="dao"></property>
+	</bean>
+	<bean id="resultService" class="com.tr.service.impl.BizCheckResultServiceImpl">
+		<property name="dao" ref="dao" />
+	</bean>
+	<bean id="positionService" class="com.tr.service.impl.SysPositionServiceImpl">
+		<property name="dao" ref="dao" />
+	</bean>
+	<bean id="leaveService" class="com.tr.service.impl.BizLeaveServiceImpl" >
+		<property name="dao" ref="dao" />
+	</bean>
+	
+	<!-- action -->
+	<bean id="employeeAction" class="com.tr.action.SysEmployeeAction" >
+		<property name="employeeService" ref="employeeService" />
+	</bean>
+	<bean id="claimVocherAction" class="com.tr.action.BizClaimVoucherAction" >
+		<property name="claimVocherService" ref="claimVocherService" />
+		<property name="claimVoucherDetailService" ref="claimVoucherDetailService" />
+		<property name="employeeService" ref="employeeService" />
+		<property name="resultService" ref="resultService" ></property>
+	</bean>
+	<bean name="checkResultAction" class="com.tr.action.BizCheckResultAction" > 
+		<property name="resultService" ref="resultService" ></property>
+		<property name="claimVocherService" ref="claimVocherService" ></property>
+		<property name="employeeService" ref="employeeService"></property>
+		<property name="positionService" ref="positionService"></property>
+	</bean>
+	<bean name="leaveAction" class="com.tr.action.BizLeaveAction" >
+		<property name="leaveService" ref="leaveService" />
+		<property name="employeeService" ref="employeeService" />
+		<property name="positionService" ref="positionService" />
+	</bean>
+	
+	<!-- 事务管理器 -->
+	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" >
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<!-- 定义事物增强 -->
+	<tx:advice id="txAdvice" transaction-manager="txManager" >
+		<!-- 定义事务规则 -->
+		<tx:attributes>
+			<tx:method name="login*" read-only="true" />
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="serach*" read-only="true" />
+			<tx:method name="query*" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 定义切面 -->
+	<aop:config>
+		<!-- 定义切入点 -->
+		<aop:pointcut id="serviceMethod" expression="execution(* com.tr.service..*.*(..))" />
+		<!-- 将事务增强与切入点组合 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod" />
+	</aop:config>
+	
+</beans>

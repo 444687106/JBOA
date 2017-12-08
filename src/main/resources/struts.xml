@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.i18n.encoding" value="utf-8" />	
+	<constant name="struts.multipart.maxSize" value="5000000"/>
+	<constant name="struts.configuration.xml.reload" value="true"/>
+	
+	<package name="default" namespace="/" extends="struts-default">
+		<!-- 登陆 -->
+		<action name="login" class="com.tr.action.SysEmployeeAction" method="login" >
+			<result name="success" >voucher/index.jsp</result>
+			<result name="input" >login.jsp</result>
+			<result name="admin" type="redirectAction" >find.action</result>
+		</action>
+		<!-- 获取添加报销单的员工对应的信息 -->
+		<action name="save" class="com.tr.action.SysEmployeeAction" method="save" >
+			<result>voucher/index.jsp</result>
+		</action>
+		<!-- 添加报销单 -->
+		<action name="add" class="com.tr.action.BizClaimVoucherAction" method="add" >
+			<result name="success" type="redirectAction" >find.action</result>
+			<result name="input" >voucher/index.jsp</result>
+		</action>
+		<!-- 查看报销单 -->
+		<action name="find" class="com.tr.action.BizClaimVoucherAction" method="find" >
+			<result>voucher/list.jsp</result>
+			<result name="input" >voucher/list.jsp</result>
+		</action>
+		<!-- 查看报销单明细 -->
+		<action name="detail" class="com.tr.action.BizClaimVoucherAction" method="detail">
+			<result name="success" type="redirectAction" >find.action</result>
+			<result name="input" type="redirectAction" >find.action</result>
+			<result name="view">voucher/detail.jsp</result>
+			<result name="edit" >voucher/edit.jsp</result>
+			<result name="sub" >voucher/sub.jsp</result>
+		</action>
+		<!-- 修改报销单明细 -->
+		<action name="edit" class="com.tr.action.BizClaimVoucherAction" method="edit" >
+			<result type="redirectAction" >add.action</result>
+			<result name="input" >voucher/edit.jsp</result>
+		</action>
+		<!-- 使用输出流发送异步 -->
+		<action name="findJson" class="com.tr.action.BizClaimVoucherAction" method="findJson">
+			<result type="stream" >
+				<param name="contentType">text/html</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<!-- 审批 -->
+		<action name="sub" class="com.tr.action.BizCheckResultAction" method="sub">
+			<result name="success" type="redirectAction" >find.action</result>
+			<result name="input">voucher/sub.jsp</result>
+		</action>
+		
+		<!-- 请假区域 -->
+		<action name="rest" class="com.tr.action.BizLeaveAction" method="rest">
+			<result>rest/addRest.jsp</result>
+		</action>
+		<!-- 新增请假 -->
+		<action name="restAdd" class="com.tr.action.BizLeaveAction" method="restAdd">
+			<result name="success" type="redirectAction" >restList.action</result>
+			<result name="input" >/rest/addRest.jsp</result>
+		</action>
+		<!-- 查看请假列表 -->
+		<action name="restList" class="com.tr.action.BizLeaveAction" method="restList">
+			<result name="success" >/rest/list.jsp</result>
+		</action>
+		<!-- 请假列表异步请求 -->
+		<action name="restJson" class="com.tr.action.BizLeaveAction" method="restJson">
+			<result type="stream" >
+				<param name="contentType">text/html</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<!-- 查看请假详情 -->
+		<action name="leaveView" class="com.tr.action.BizLeaveAction" method="leaveView">
+			<result name="success" >/rest/leaveView.jsp</result>
+			<result name="approval" >/rest/approval.jsp</result>
+		</action>
+		<!-- 审批请假 -->
+		<action name="approval" class="com.tr.action.BizLeaveAction" method="approval">
+			<result name="success" type="redirectAction" >restList.action</result>
+		</action>
+		
+	</package>
+	
+<!-- 	<package name="json" namespace="/" extends="json-default"> -->
+<!-- 		<action name="findJson" class="com.tr.action.BizClaimVoucherAction" method="find" > -->
+<!-- 			<result type="json"> -->
+<!-- 				<param name="root">claimVoucherList</param> -->
+<!-- 				<param name="includeProperties"> -->
+<!-- 					\[\d+\]\.id,\[\d+\]\.createTime,\[\d+\]\.sysEmployeeByCreateSn\.name, -->
+<!-- 					\[\d+\]\.totalAccount,\[\d+\]\.status,\[\d+\]\.sysEmployeeByNextDealSn\.name, -->
+<!-- 				</param> -->
+<!-- 				<param name="excudeNullProperties">true</param> -->
+<!-- 			</result> -->
+<!-- 		</action> -->
+<!-- 	</package> -->
+	
+</struts>

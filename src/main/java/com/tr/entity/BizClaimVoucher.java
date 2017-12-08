@@ -1,0 +1,139 @@
+package com.tr.entity;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * BizClaimVoucher entity. @author MyEclipse Persistence Tools
+ */
+
+public class BizClaimVoucher implements java.io.Serializable {
+
+	// Fields
+
+	private Long id;
+	private SysEmployee sysEmployeeByNextDealSn;
+	private SysEmployee sysEmployeeByCreateSn;
+	private Date createTime;
+	private Date modifyTime;
+	private String event;
+	private Double totalAccount;
+	private String status;
+	private Set bizCheckResults = new HashSet(0);
+	private Set bizClaimVoucherDetails = new HashSet(0);
+
+	// Constructors
+
+	/** default constructor */
+	public BizClaimVoucher() {
+	}
+
+	/** minimal constructor */
+	public BizClaimVoucher(SysEmployee sysEmployeeByCreateSn, Date createTime,
+			Double totalAccount, String status) {
+		this.sysEmployeeByCreateSn = sysEmployeeByCreateSn;
+		this.createTime = createTime;
+		this.totalAccount = totalAccount;
+		this.status = status;
+	}
+
+	/** full constructor */
+	public BizClaimVoucher(SysEmployee sysEmployeeByNextDealSn,
+			SysEmployee sysEmployeeByCreateSn, Date createTime,
+			Date modifyTime, String event, Double totalAccount, String status,
+			Set bizCheckResults, Set bizClaimVoucherDetails) {
+		this.sysEmployeeByNextDealSn = sysEmployeeByNextDealSn;
+		this.sysEmployeeByCreateSn = sysEmployeeByCreateSn;
+		this.createTime = createTime;
+		this.modifyTime = modifyTime;
+		this.event = event;
+		this.totalAccount = totalAccount;
+		this.status = status;
+		this.bizCheckResults = bizCheckResults;
+		this.bizClaimVoucherDetails = bizClaimVoucherDetails;
+	}
+
+	// Property accessors
+
+	public Long getId() {
+		return this.id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public SysEmployee getSysEmployeeByNextDealSn() {
+		return this.sysEmployeeByNextDealSn;
+	}
+
+	public void setSysEmployeeByNextDealSn(SysEmployee sysEmployeeByNextDealSn) {
+		this.sysEmployeeByNextDealSn = sysEmployeeByNextDealSn;
+	}
+
+	public SysEmployee getSysEmployeeByCreateSn() {
+		return this.sysEmployeeByCreateSn;
+	}
+
+	public void setSysEmployeeByCreateSn(SysEmployee sysEmployeeByCreateSn) {
+		this.sysEmployeeByCreateSn = sysEmployeeByCreateSn;
+	}
+
+	public Date getCreateTime() {
+		return this.createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getModifyTime() {
+		return this.modifyTime;
+	}
+
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
+	}
+
+	public String getEvent() {
+		return this.event;
+	}
+
+	public void setEvent(String event) {
+		this.event = event;
+	}
+
+	public Double getTotalAccount() {
+		return this.totalAccount;
+	}
+
+	public void setTotalAccount(Double totalAccount) {
+		this.totalAccount = totalAccount;
+	}
+
+	public String getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Set getBizCheckResults() {
+		return this.bizCheckResults;
+	}
+
+	public void setBizCheckResults(Set bizCheckResults) {
+		this.bizCheckResults = bizCheckResults;
+	}
+
+	public Set getBizClaimVoucherDetails() {
+		return this.bizClaimVoucherDetails;
+	}
+
+	public void setBizClaimVoucherDetails(Set bizClaimVoucherDetails) {
+		this.bizClaimVoucherDetails = bizClaimVoucherDetails;
+	}
+
+}
